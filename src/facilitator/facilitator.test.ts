@@ -16,21 +16,23 @@ describe("Facilitator endpoints", () => {
     expect(response.status).toBe(200);
   });
 
-  test("handleSupportedRequest returns supported payment kinds", async () => {
+  test("handleSupportedRequest returns supported payment methods", async () => {
     const response = handleSupportedRequest();
     expect(response.status).toBe(200);
 
     const data = (await response.json()) as any;
-    expect(data).toHaveProperty("kinds");
-    expect(Array.isArray(data.kinds)).toBe(true);
-    expect(data.kinds.length).toBeGreaterThan(0);
+    expect(data).toHaveProperty("methods");
+    expect(Array.isArray(data.methods)).toBe(true);
+    expect(data.methods.length).toBeGreaterThan(0);
 
-    const firstKind = data.kinds[0];
-    expect(firstKind).toHaveProperty("x402Version");
-    expect(firstKind).toHaveProperty("scheme");
-    expect(firstKind).toHaveProperty("network");
-    expect(firstKind.x402Version).toBe(1);
-    expect(firstKind.scheme).toBe("exact");
+    const firstMethod = data.methods[0];
+    expect(firstMethod).toHaveProperty("network");
+    expect(firstMethod).toHaveProperty("token");
+    expect(firstMethod).toHaveProperty("address");
+    expect(firstMethod).toHaveProperty("min");
+    expect(firstMethod).toHaveProperty("max");
+    expect(firstMethod.token).toBe("USDC");
+    expect(firstMethod.address).toMatch(/^0x[a-fA-F0-9]{40}$/); // Valid Ethereum address
   });
 
   test("handleVerifyGetRequest structure", async () => {
