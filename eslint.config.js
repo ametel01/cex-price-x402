@@ -55,10 +55,11 @@ export default [
     files: ["**/*.test.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
     },
   },
   prettier,
   {
-    ignores: ["node_modules/", "dist/", "build/", "*.min.js", "coverage/"],
+    ignores: ["node_modules/", "dist/", "build/", "*.min.js", "coverage/", "ignored/"],
   },
 ];
