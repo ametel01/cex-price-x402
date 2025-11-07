@@ -131,9 +131,7 @@ describe("Compositor", () => {
 
       // Weighted average should be closer to Binance (tighter spread)
       const price = parseFloat(quote!.price);
-      expect(Math.abs(price - binanceMid)).toBeLessThan(
-        Math.abs(price - coinbaseMid)
-      );
+      expect(Math.abs(price - binanceMid)).toBeLessThan(Math.abs(price - coinbaseMid));
     });
 
     test("excludes venues with missing bid/ask", () => {

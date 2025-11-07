@@ -233,7 +233,9 @@ export class BinanceAdapter implements VenueAdapter {
     // Try next URL after 3 failed attempts with current URL
     if (this.reconnectAttempts > 0 && this.reconnectAttempts % 3 === 0) {
       this.currentUrlIndex = (this.currentUrlIndex + 1) % BINANCE_WS_URLS.length;
-      console.log(`[Binance] Trying alternative endpoint: ${BINANCE_WS_URLS[this.currentUrlIndex]}`);
+      console.log(
+        `[Binance] Trying alternative endpoint: ${BINANCE_WS_URLS[this.currentUrlIndex]}`
+      );
     }
 
     const delay = Math.min(

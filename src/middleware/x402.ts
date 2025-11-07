@@ -124,7 +124,10 @@ async function verifyPayment(
       return false;
     }
 
-    const verifyResult = (await verifyResponse.json()) as { isValid: boolean; invalidReason?: string };
+    const verifyResult = (await verifyResponse.json()) as {
+      isValid: boolean;
+      invalidReason?: string;
+    };
     console.log("[x402] Verification result:", verifyResult);
 
     if (!verifyResult.isValid) {

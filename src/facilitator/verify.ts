@@ -15,14 +15,7 @@ import {
 } from "x402/types";
 import { createPublicClient, http, type Chain } from "viem";
 import { publicActions } from "viem";
-import {
-  baseSepolia,
-  base,
-  avalanche,
-  avalancheFuji,
-  polygon,
-  polygonAmoy,
-} from "viem/chains";
+import { baseSepolia, base, avalanche, avalancheFuji, polygon, polygonAmoy } from "viem/chains";
 
 interface VerifyRequest {
   paymentPayload: PaymentPayload;

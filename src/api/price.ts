@@ -12,18 +12,12 @@ import { PairSchema } from "../types";
  * Handle GET /v1/price?pair=BTC-USD
  * Returns a single quote for the specified pair
  */
-export function handlePriceRequest(
-  req: Request,
-  compositor: Compositor
-): Response {
+export function handlePriceRequest(req: Request, compositor: Compositor): Response {
   const url = new URL(req.url);
   const pairParam = url.searchParams.get("pair");
 
   if (!pairParam) {
-    return Response.json(
-      { error: "Missing required parameter: pair" },
-      { status: 400 }
-    );
+    return Response.json({ error: "Missing required parameter: pair" }, { status: 400 });
   }
 
   // Validate pair format
@@ -58,10 +52,7 @@ export function handlePriceRequest(
  * Handle GET /v1/quotes?pairs=BTC-USD,ETH-USD
  * Returns quotes for multiple pairs
  */
-export function handleQuotesRequest(
-  req: Request,
-  compositor: Compositor
-): Response {
+export function handleQuotesRequest(req: Request, compositor: Compositor): Response {
   const url = new URL(req.url);
   const pairsParam = url.searchParams.get("pairs");
 
