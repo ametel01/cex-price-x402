@@ -6,11 +6,7 @@
 
 import type { Quote, Pair, VenueMid } from "../types";
 import type { MemoryCache } from "../cache/memory";
-import {
-  calculateMid,
-  calculateSpreadBps,
-  calculateWeightedAverage,
-} from "../utils/decimal";
+import { calculateMid, calculateSpreadBps, calculateWeightedAverage } from "../utils/decimal";
 
 const MAX_STALENESS_MS = 2000; // 2 seconds
 
@@ -56,7 +52,9 @@ export class Compositor {
     }
 
     // Filter out ticks without bid/ask
-    const validTicks = ticks.filter((t) => t.bid && t.ask);
+    const validTicks = ticks.filter(
+      (t): t is typeof t & { bid: number; ask: number } => t.bid != null && t.ask != null
+    );
 
     if (validTicks.length < this.options.minVenues) {
       return null;
@@ -64,8 +62,8 @@ export class Compositor {
 
     // Calculate venue mids and metadata
     const venueMids: VenueMid[] = validTicks.map((tick) => {
-      const mid = calculateMid(tick.bid!, tick.ask!);
-      const spreadBps = calculateSpreadBps(tick.bid!, tick.ask!);
+      const mid = calculateMid(tick.bid, tick.ask);
+      const spreadBps = calculateSpreadBps(tick.bid, tick.ask);
       const ageMs = this.cache.getStaleness(tick.venue, tick.pair) || 0;
 
       return {
@@ -88,7 +86,10 @@ export class Compositor {
 
     // Assign weights to venue mids
     venueMids.forEach((v, i) => {
-      v.w = weights[i]!;
+      const weight = weights[i];
+      if (weight !== undefined) {
+        v.w = weight;
+      }
     });
 
     // Calculate weighted average price
@@ -133,10 +134,7 @@ export class Compositor {
   /**
    * Calculate bid/ask from mid price and spread
    */
-  private calculateBidAsk(
-    mid: string,
-    spreadBps: number
-  ): { bid: string; ask: string } {
+  private calculateBidAsk(mid: string, spreadBps: number): { bid: string; ask: string } {
     const midNum = parseFloat(mid);
     const spreadFraction = spreadBps / 10000; // Convert bps to fraction
     const halfSpread = (midNum * spreadFraction) / 2;

@@ -51,10 +51,14 @@ export function calculateWeightedAverage(values: string[], weights: number[]): s
   let weightSum = 0;
 
   for (let i = 0; i < values.length; i++) {
-    const value = new Decimal(values[i]!);
-    const weight = weights[i]!;
-    sum = sum.plus(value.mul(weight));
-    weightSum += weight;
+    const val = values[i];
+    const wt = weights[i];
+    if (val === undefined || wt === undefined) {
+      throw new Error("Invalid array access");
+    }
+    const value = new Decimal(val);
+    sum = sum.plus(value.mul(wt));
+    weightSum += wt;
   }
 
   if (weightSum === 0) {
@@ -80,8 +84,13 @@ export function calculateVWAP(prices: string[], volumes: string[]): string {
   let totalVolume = new Decimal(0);
 
   for (let i = 0; i < prices.length; i++) {
-    const price = new Decimal(prices[i]!);
-    const volume = new Decimal(volumes[i]!);
+    const priceStr = prices[i];
+    const volumeStr = volumes[i];
+    if (priceStr === undefined || volumeStr === undefined) {
+      throw new Error("Invalid array access");
+    }
+    const price = new Decimal(priceStr);
+    const volume = new Decimal(volumeStr);
     totalValue = totalValue.plus(price.mul(volume));
     totalVolume = totalVolume.plus(volume);
   }

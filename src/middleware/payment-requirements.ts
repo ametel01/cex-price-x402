@@ -6,6 +6,22 @@ import type { PaymentRequirements } from "x402/types";
 import type { RoutePattern } from "./types";
 import { getConfig } from "../config/env";
 
+type SupportedNetwork =
+  | "abstract"
+  | "abstract-testnet"
+  | "base-sepolia"
+  | "base"
+  | "avalanche-fuji"
+  | "avalanche"
+  | "sei"
+  | "sei-testnet"
+  | "polygon"
+  | "polygon-amoy"
+  | "peaq"
+  | "iotex"
+  | "solana-devnet"
+  | "solana";
+
 /**
  * Build payment requirements from route pattern
  */
@@ -42,14 +58,14 @@ export function buildPaymentRequirements(
 
   return {
     scheme: "exact",
-    network: config.network as any,
+    network: config.network as SupportedNetwork,
     maxAmountRequired,
     resource,
     description: routeConfig.description || `Access to ${resource}`,
     mimeType: routeConfig.mimeType || "application/json",
-    payTo: walletAddress as any,
+    payTo: walletAddress,
     maxTimeoutSeconds: 60,
-    asset: asset as any,
+    asset: asset,
     // Include USDC contract metadata so client and server use same EIP-712 domain
     extra: usdcMetadata,
   };
@@ -69,7 +85,7 @@ function getUsdcAddressForNetwork(network: string): string {
     "avalanche-fuji": "0x5425890298aed601595a70AB815c96711a31Bc65",
   };
 
-  return usdcAddresses[network] || usdcAddresses["base-sepolia"]!;
+  return usdcAddresses[network] ?? "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 }
 
 /**
@@ -105,7 +121,7 @@ function getUsdcMetadata(network: string): { name: string; version: string } {
     },
   };
 
-  return metadata[network] || metadata["base-sepolia"]!;
+  return metadata[network] ?? { name: "USDC", version: "2" };
 }
 
 /**

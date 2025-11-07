@@ -6,6 +6,22 @@
 import type { SupportedPaymentKindsResponse } from "x402/types";
 import { getConfig } from "../config/env";
 
+type SupportedNetwork =
+  | "abstract"
+  | "abstract-testnet"
+  | "base-sepolia"
+  | "base"
+  | "avalanche-fuji"
+  | "avalanche"
+  | "sei"
+  | "sei-testnet"
+  | "polygon"
+  | "polygon-amoy"
+  | "peaq"
+  | "iotex"
+  | "solana-devnet"
+  | "solana";
+
 /**
  * Handles GET requests to list supported payment methods
  */
@@ -17,7 +33,7 @@ export function handleSupportedRequest(): Response {
       {
         x402Version: 1,
         scheme: "exact",
-        network: config.network as any,
+        network: config.network as SupportedNetwork,
       },
     ],
   };
