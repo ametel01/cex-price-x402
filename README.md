@@ -2,9 +2,6 @@
 
 [![CI](https://github.com/ametel01/cex-price-x402/actions/workflows/ci.yml/badge.svg)](https://github.com/ametel01/cex-price-x402/actions/workflows/ci.yml)
 
-<!-- Coverage badge will appear here after setup - see .github/README.md for instructions -->
-<!-- [![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ametel01/coverage-badge-cex-price-x402/raw/coverage.json)](https://github.com/ametel01/cex-price-x402/actions/workflows/ci.yml) -->
-
 A real-time cryptocurrency pricing API that aggregates data from multiple exchanges and protects endpoints with x402 micropayments. Built with Bun, this API demonstrates how to monetize API access using the x402 protocol with ERC-3009 permit-based USDC payments on Base Sepolia.
 
 ## What is This?
