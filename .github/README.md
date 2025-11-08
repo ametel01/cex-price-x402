@@ -115,7 +115,9 @@ Cache key is based on the hash of `bun.lock`, ensuring cache invalidation when d
 
 ## Coverage Badge Setup (Optional)
 
-The CI workflow generates a dynamic coverage badge that displays in the README. To enable it:
+**Note:** The coverage badge is currently disabled (commented out in README.md). The CI workflow will skip badge generation until you complete the setup below.
+
+To enable the coverage badge:
 
 ### 1. Create a GitHub Personal Access Token
 
@@ -141,9 +143,8 @@ The CI workflow generates a dynamic coverage badge that displays in the README. 
 4. Content: `{}`
 5. Click "Create public gist"
 6. Copy the gist ID from the URL (the long alphanumeric string)
-7. Update the gist ID in:
-   - `.github/workflows/ci.yml` (line 73)
-   - `README.md` (line 4)
+7. Update the gist ID in `.github/workflows/ci.yml` (line 74)
+8. Uncomment the coverage badge in `README.md` (line 5)
 
 The badge will update automatically on every push to `main` with the current coverage percentage.
 

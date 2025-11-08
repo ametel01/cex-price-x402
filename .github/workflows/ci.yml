@@ -61,12 +61,13 @@ jobs:
       - name: Extract coverage percentage
         id: coverage
         run: |
-          COVERAGE=$(grep "All files" coverage-output.txt | awk -F'|' '{print $3}' | xargs)
+          COVERAGE=$(grep "All files" coverage-output.txt | awk -F'|' '{print $3}' | xargs || echo "0")
           echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
           echo "Coverage: $COVERAGE%"
 
       - name: Create coverage badge
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && secrets.GIST_SECRET != ''
+        continue-on-error: true
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.GIST_SECRET }}
