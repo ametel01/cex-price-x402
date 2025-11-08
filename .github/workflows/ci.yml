@@ -61,13 +61,32 @@ jobs:
       - name: Extract coverage percentage
         id: coverage
         run: |
-          COVERAGE=$(grep "All files" coverage-output.txt | awk -F'|' '{print $3}' | tr -d ' ' || echo "0")
-          if [ -z "$COVERAGE" ] || [ "$COVERAGE" = "|" ]; then
+          echo "=== Debug: Checking coverage-output.txt ==="
+          if [ -f coverage-output.txt ]; then
+            echo "File exists, size: $(wc -l coverage-output.txt)"
+            echo "=== First 20 lines ==="
+            head -20 coverage-output.txt
+            echo "=== Lines with 'files' ==="
+            grep -i "files" coverage-output.txt || echo "No 'files' found"
+            echo "=== Attempting extraction ==="
+          else
+            echo "ERROR: coverage-output.txt not found!"
+          fi
+
+          COVERAGE=$(grep "All files" coverage-output.txt | awk -F'|' '{print $3}' | tr -d ' ' || echo "")
+
+          if [ -z "$COVERAGE" ]; then
+            echo "Failed with method 1, trying alternative..."
+            COVERAGE=$(grep -i "all files" coverage-output.txt | sed -n 's/.*|\s*\([0-9.]*\)\s*|\s*\([0-9.]*\)\s*|.*/\2/p' || echo "")
+          fi
+
+          if [ -z "$COVERAGE" ]; then
+            echo "WARNING: Could not extract coverage, using 0"
             COVERAGE="0"
           fi
+
           echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
-          echo "Coverage: $COVERAGE%"
-          cat coverage-output.txt | grep -A 3 "All files" || echo "Debug: Coverage output not found"
+          echo "Final coverage: $COVERAGE%"
 
       - name: Create coverage badge
         if: github.ref == 'refs/heads/main'
@@ -81,12 +100,12 @@ jobs:
           message: ${{ steps.coverage.outputs.percentage }}%
           color: ${{ steps.coverage.outputs.percentage > 80 && 'green' || steps.coverage.outputs.percentage > 60 && 'yellow' || 'red' }}
 
-      - name: Upload coverage
+      - name: Upload coverage output
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: coverage
-          path: coverage/
+          name: coverage-output
+          path: coverage-output.txt
           retention-days: 7
 
       - name: Build
