@@ -113,6 +113,24 @@ Facilitator:
   GET  /facilitator/supported - List supported methods
 ```
 
+### Docker Deployment
+
+Run the API in Docker with a single command:
+
+```bash
+# Copy and configure environment file
+cp .env.docker .env
+# Edit .env with your wallet address
+
+# Start with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+For detailed Docker instructions, including production deployment, health checks, and troubleshooting, see [DOCKER.md](DOCKER.md).
+
 ### Testing
 
 Run all tests:
