@@ -8,6 +8,7 @@
     "dev": "bun --hot index.ts",
     "start": "bun index.ts",
     "stop": "./stop-server.sh",
+    "build": "bun build index.ts --outdir ./dist --target bun --sourcemap --minify",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "type-check": "tsc --noEmit",
@@ -15,7 +16,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "check": "bun run type-check && bun run format:check && bun run lint"
+    "check": "bun run type-check && bun run format:check && bun run lint",
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
