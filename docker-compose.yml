@@ -1,0 +1,67 @@
+services:
+  cex-price-api:
+    # Build from local Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Or use pre-built image from GitHub Container Registry
+    # image: ghcr.io/<your-username>/cex-price-x402:latest
+
+    container_name: cex-price-x402
+
+    # Port mapping - HOST:CONTAINER
+    ports:
+      - "8080:8080"
+
+    # Environment variables
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - NETWORK=${NETWORK:-base-sepolia}
+      - RESOURCE_WALLET_ADDRESS=${RESOURCE_WALLET_ADDRESS}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - FACILITATOR_URL=${FACILITATOR_URL:-http://localhost:8080/facilitator}
+      - PAIRS=${PAIRS:-BTC-USD,ETH-USD}
+      - SPREAD_BPS_MAX=${SPREAD_BPS_MAX:-25}
+      - STALE_MS=${STALE_MS:-2000}
+
+    # Load additional environment variables from .env file
+    env_file:
+      - .env
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Network configuration
+    networks:
+      - cex-price-network
+
+networks:
+  cex-price-network:
+    driver: bridge

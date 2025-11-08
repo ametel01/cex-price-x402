@@ -1,0 +1,34 @@
+# Development override for docker-compose
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  cex-price-api:
+    # Override build for development (no minification)
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+
+    # Development environment
+    environment:
+      - NODE_ENV=development
+
+    # Mount source code for hot reload
+    volumes:
+      - ./src:/app/src:ro
+      - ./index.ts:/app/index.ts:ro
+
+    # Development command with hot reload
+    command: bun --hot index.ts
+
+    # Development ports
+    ports:
+      - "8080:8080"
+      - "9229:9229"  # Debug port
+
+    # More verbose logging in development
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
