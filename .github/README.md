@@ -112,3 +112,45 @@ The workflows cache:
 - `node_modules` directory
 
 Cache key is based on the hash of `bun.lock`, ensuring cache invalidation when dependencies change.
+
+## Coverage Badge Setup (Optional)
+
+The CI workflow generates a dynamic coverage badge that displays in the README. To enable it:
+
+### 1. Create a GitHub Personal Access Token
+
+1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. Click "Generate new token (classic)"
+3. Give it a descriptive name (e.g., "Coverage Badge for cex-price-x402")
+4. Select scope: **`gist`** (only this scope is needed)
+5. Click "Generate token" and copy the token
+
+### 2. Add the Token as a Repository Secret
+
+1. Go to your repository → Settings → Secrets and variables → Actions
+2. Click "New repository secret"
+3. Name: `GIST_SECRET`
+4. Value: Paste the token you created
+5. Click "Add secret"
+
+### 3. Create a Gist for the Badge
+
+1. Go to https://gist.github.com/
+2. Create a new **public** gist
+3. Filename: `coverage.json`
+4. Content: `{}`
+5. Click "Create public gist"
+6. Copy the gist ID from the URL (the long alphanumeric string)
+7. Update the gist ID in:
+   - `.github/workflows/ci.yml` (line 73)
+   - `README.md` (line 4)
+
+The badge will update automatically on every push to `main` with the current coverage percentage.
+
+### Alternative: Simple Coverage Tracking
+
+If you don't want to set up the badge, you can:
+
+1. Remove the "Create coverage badge" step from `.github/workflows/ci.yml`
+2. Remove or comment out the coverage badge line in `README.md`
+3. Coverage reports are still available as CI artifacts for 7 days
