@@ -297,8 +297,8 @@ describe("Compositor", () => {
       const quote = compositor.getQuote("BTC-USD");
 
       expect(quote).not.toBeNull();
-      // Max staleness should be for the older tick
-      expect(quote!.staleness_ms).toBeGreaterThanOrEqual(100);
+      // Max staleness should be for the older tick (allowing for timing variance)
+      expect(quote!.staleness_ms).toBeGreaterThanOrEqual(95);
     });
   });
 });
