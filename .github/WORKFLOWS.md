@@ -113,16 +113,25 @@ The workflows cache:
 
 Cache key is based on the hash of `bun.lock`, ensuring cache invalidation when dependencies change.
 
-## Coverage Badge (Optional - Currently Disabled)
+## Coverage Badge
 
-The coverage badge feature is currently disabled. Coverage reports are available as CI artifacts for 7 days after each run.
+The CI workflow automatically generates a coverage badge that displays in the README.
 
-To enable dynamic coverage badges, you would need to:
+**How it works:**
 
-1. Create a GitHub personal access token with `gist` scope
-2. Add it as a repository secret named `GIST_SECRET`
-3. Create a public gist to store the badge data
-4. Uncomment the coverage badge steps in `.github/workflows/ci.yml`
-5. Add the badge to `README.md`
+- On every push to `main`, the workflow extracts the coverage percentage
+- Updates a GitHub Gist with the current coverage data
+- The badge in README.md displays the latest coverage
 
-This is completely optional - the CI already tracks coverage in the test artifacts.
+**Badge Colors:**
+
+- 🟢 Green: > 80% coverage
+- 🟡 Yellow: 60-80% coverage
+- 🔴 Red: < 60% coverage
+
+**Requirements:**
+
+- `GIST_SECRET` must be configured in repository secrets (with `gist` scope)
+- Gist ID: `7612b07cbc433f6b5339e3728f5b88d6`
+
+Coverage reports are also available as CI artifacts for 7 days after each run.

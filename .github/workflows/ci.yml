@@ -46,7 +46,7 @@ jobs:
         run: bun run lint -- --max-warnings=0
 
       - name: Unit tests
-        run: bun test --coverage
+        run: bun test --coverage | tee coverage-output.txt
         env:
           NODE_ENV: test
           PORT: 8080
@@ -58,25 +58,24 @@ jobs:
           SPREAD_BPS_MAX: 25
           STALE_MS: 2000
 
-      # Coverage badge generation is disabled until GIST_SECRET is configured
-      # See .github/WORKFLOWS.md for setup instructions
-      # - name: Extract coverage percentage
-      #   id: coverage
-      #   run: |
-      #     COVERAGE=$(grep "All files" coverage-output.txt | awk -F'|' '{print $3}' | xargs || echo "0")
-      #     echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
-      #     echo "Coverage: $COVERAGE%"
-      # - name: Create coverage badge
-      #   if: github.ref == 'refs/heads/main'
-      #   continue-on-error: true
-      #   uses: schneegans/dynamic-badges-action@v1.7.0
-      #   with:
-      #     auth: ${{ secrets.GIST_SECRET }}
-      #     gistID: coverage-badge-cex-price-x402
-      #     filename: coverage.json
-      #     label: coverage
-      #     message: ${{ steps.coverage.outputs.percentage }}%
-      #     color: ${{ steps.coverage.outputs.percentage > 80 && 'green' || steps.coverage.outputs.percentage > 60 && 'yellow' || 'red' }}
+      - name: Extract coverage percentage
+        id: coverage
+        run: |
+          COVERAGE=$(grep "All files" coverage-output.txt | awk -F'|' '{print $3}' | xargs || echo "0")
+          echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
+          echo "Coverage: $COVERAGE%"
+
+      - name: Create coverage badge
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 7612b07cbc433f6b5339e3728f5b88d6
+          filename: coverage.json
+          label: coverage
+          message: ${{ steps.coverage.outputs.percentage }}%
+          color: ${{ steps.coverage.outputs.percentage > 80 && 'green' || steps.coverage.outputs.percentage > 60 && 'yellow' || 'red' }}
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
